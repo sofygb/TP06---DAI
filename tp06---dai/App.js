@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable, Text } from 'react-native';
 import Formulario from './components/Formulario';
+import ListadoTareas from './components/ListadoTareas';
 
 export default function App() {
   const [tareas, setTareas] = React.useState([])
@@ -16,6 +17,7 @@ export default function App() {
       <Formulario setTareas={setTareas} tareas={tareas}/>
       
       <StatusBar style="auto" />
+      <ListadoTareas tareas={tareas} setTareas={setTareas}/>
     </View>
   );
 }

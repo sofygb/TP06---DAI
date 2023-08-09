@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Modal, Portal, Text, Button, PaperProvider } from "react-native-paper";
-import { StyleSheet, View, Pressable } from "react-native";
+import { Modal, Portal, Button, PaperProvider } from "react-native-paper";
+import { StyleSheet, View, Pressable, Text } from "react-native";
 
 const Formulario = (props) => {
   //State del modal
@@ -15,8 +15,11 @@ const Formulario = (props) => {
       Tarea: document.getElementById("tarea").value,
       Descripcion: document.getElementById("descripcion").value,
     };
+    console.log(nuevaTarea)
 
     props.setTareas([...props.tareas, nuevaTarea]);
+
+    console.log(props.tareas)
   };
 
   return (
@@ -55,14 +58,14 @@ const Formulario = (props) => {
 
         <View style={styles.row}>
           <Pressable style={styles.pressable} onPress={updateTarea}>
-            Aceptar
+            <Text>Aceptar</Text>
           </Pressable>
         </View>
       </View>
           </Modal>
         </Portal>
         <Pressable style={styles.pressable} onPress={showModal}>
-          Add Task +
+          <Text>Add Task +</Text>
         </Pressable>
       </PaperProvider>
       
