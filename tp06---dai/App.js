@@ -7,17 +7,26 @@ import ListadoTareas from './components/ListadoTareas';
 export default function App() {
   const [tareas, setTareas] = React.useState([])
 
-
+  function updateTask(p){
+    setTareas(p)
+    console.log(p)
+  }
 
 
   return (
     <View style={styles.container}>
       <h1>Listado de Tareas</h1>
 
-      <Formulario setTareas={setTareas} tareas={tareas}/>
+      <Formulario setTareas={updateTask} tareas={tareas}/>
+    {tareas.map((tarea)=>
+      (<>
+          <Text>{tarea.Tarea}</Text>
+          <Text>{tarea.Descripcion}</Text>
+      </>)
+      )   
+    }
       
       <StatusBar style="auto" />
-      <ListadoTareas tareas={tareas} setTareas={setTareas}/>
     </View>
   );
 }
