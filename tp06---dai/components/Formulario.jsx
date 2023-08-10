@@ -19,7 +19,7 @@ const Formulario = (props) => {
 
     props.setTareas([...props.tareas, nuevaTarea]);
 
-    console.log(props.tareas)
+    hideModal()
   };
 
   return (
