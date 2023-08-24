@@ -35,6 +35,9 @@ export default function App() {
         <h1>Listado de Tareas</h1>
 
         <Formulario setTareas={updateTask} tareas={tareas} />
+        
+        <ListadoTareas tareas={tareas} setTareas={updateTask} />
+        
         {tareas.map((tarea) => (
           <>
             <ListItem.Swipeable
@@ -43,19 +46,11 @@ export default function App() {
                 <Button
                   title="Info"
                   onPress={() => eliminarTarea(tarea.Tarea)}
-                  icon={{ name: "info", color: "green" }}
-                  buttonStyle={{ minHeight: "100%", backgroundColor: "red"  }}
+                  icon={{ name: "delete", color: "green" }}
+                  buttonStyle={{ minHeight: "100%", backgroundColor: "blue"  }}
                   />
                 <RightOutlined />
                   </>
-              )}
-              rightContent={() => (
-                <Button
-                  title="Delete"
-                  onPress={() => eliminarTarea(tarea.Tarea)}
-                  icon={{ name: "delete", color: "white" }}
-                  buttonStyle={{ minHeight: "100%", backgroundColor: "blue" }}
-                />
               )}
             >
               <Icon name="My Icon" />
