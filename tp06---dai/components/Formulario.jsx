@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Modal, Portal, Button, PaperProvider } from "react-native-paper";
 import { StyleSheet, View, Pressable, Text } from "react-native";
+import { storeData } from "../asyncStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Formulario = (props) => {
   //State del modal
@@ -17,7 +19,10 @@ const Formulario = (props) => {
     };
     console.log(nuevaTarea)
 
-    props.setTareas([...props.tareas, nuevaTarea]);
+    const listaFinal = [...props.tareas, nuevaTarea]
+
+    props.setTareas(listaFinal);
+    storeData(listaFinal)
 
     hideModal()
   };

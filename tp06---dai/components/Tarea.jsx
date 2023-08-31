@@ -3,10 +3,13 @@ import { View } from "react-native-web";
 import { ListItem, Icon, Button } from "@rneui/themed";
 import { Text } from "react-native";
 import { RightOutlined } from "@ant-design/icons";
+import { getData } from "../asyncStorage";
 
 const Tarea = ({ tarea, tareas, setTareas, posicion }) => {
   
   const eliminarTarea = () => {
+    console.log("Tareas: " + tareas)
+    console.log("Tareas: " + tarea)
     var lista1 = tareas.slice(0, posicion);
     console.log("Lista 1:" + lista1)
     var lista2 = tareas.slice(posicion + 1, tareas.length);
@@ -15,18 +18,20 @@ const Tarea = ({ tarea, tareas, setTareas, posicion }) => {
     setTareas(lista1.concat(lista2));
   };
 
+  var asyncTareas = getData()
+    console.log(asyncTareas)
+
   return (
     <View>
       <ListItem.Swipeable
       leftContent={() => (
         <>
         <Button
-          title="Info"
+          title="Eliminar"
           onPress={() => eliminarTarea()}
           icon={{ name: "info", color: "white" }}
           buttonStyle={{ minHeight: "100%", backgroundColor: "red"}}
           />
-          <RightOutlined />
           </>
       )}
         

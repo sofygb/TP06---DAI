@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, Pressable, Text } from "react-native";
 import Formulario from "./components/Formulario";
@@ -6,9 +7,17 @@ import ListadoTareas from "./components/ListadoTareas";
 import { ListItem, Icon, Button } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RightOutlined } from "@ant-design/icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getData, storeData } from "./asyncStorage";
 
 export default function App() {
-  const [tareas, setTareas] = React.useState([]);
+  const [tareas, setTareas] = useState([]);
+
+  
+
+  useEffect(()=>{ //ctualiza el asyncStorage solo cuando tarea cambia (Eliminar o crear tarea)
+    storeData(tareas)
+  }, [tareas])
 
   function updateTask(p) {
     setTareas(p);
@@ -17,7 +26,9 @@ export default function App() {
 
   const eliminarTarea = (tarea) => {
     //const nuevasTareas = tareas.filter((tareas) => tareas.tarea == tarea);
+    console.log(tareas)
     const posicion = tareas.indexOf({Tarea: tarea});
+
 
     const lista1 = tareas.slice(0, posicion);
     const lista2 = tareas.slice(posicion + 1, tareas.length);
@@ -38,30 +49,6 @@ export default function App() {
         
         <ListadoTareas tareas={tareas} setTareas={updateTask} />
         
-        {tareas.map((tarea) => (
-          <>
-            <ListItem.Swipeable
-              leftContent={() => (
-                <>
-                <Button
-                  title="Info"
-                  onPress={() => eliminarTarea(tarea.Tarea)}
-                  icon={{ name: "delete", color: "green" }}
-                  buttonStyle={{ minHeight: "100%", backgroundColor: "blue"  }}
-                  />
-                <RightOutlined />
-                  </>
-              )}
-            >
-              <Icon name="My Icon" />
-              <ListItem.Content>
-                <ListItem.Title>{tarea.Tarea}</ListItem.Title>
-                <ListItem.Subtitle>{tarea.Descripcion}</ListItem.Subtitle>
-              </ListItem.Content>
-              <ListItem.Chevron />
-            </ListItem.Swipeable>
-          </>
-        ))}
 
         <StatusBar style="auto" />
       </View>
@@ -96,3 +83,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9",
   },
 });
+/*
+{tareas.map((tarea) => (
+  <>
+  <ListItem.Swipeable
+  leftContent={() => (
+    <>
+    <Button
+    title="Info"
+    onPress={() => eliminarTarea(tarea.Tarea)}
+    icon={{ name: "delete", color: "green" }}
+    buttonStyle={{ minHeight: "100%", backgroundColor: "blue"  }}
+    />
+    <RightOutlined />
+    </>
+       )}
+       >
+       <Icon name="My Icon" />
+       <ListItem.Content>
+       <ListItem.Title>{tarea.Tarea}</ListItem.Title>
+       <ListItem.Subtitle>{tarea.Descripcion}</ListItem.Subtitle>
+       </ListItem.Content>
+       <ListItem.Chevron />
+       </ListItem.Swipeable>
+       </>
+       ))} 
+       */
