@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Modal, Portal, Button, PaperProvider } from "react-native-paper";
-import { StyleSheet, View, Pressable, Text } from "react-native";
+import { StyleSheet, View, Pressable, Text, CheckBox } from "react-native";
 import { storeData } from "../asyncStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -16,6 +16,7 @@ const Formulario = (props) => {
     const nuevaTarea = {
       Tarea: document.getElementById("tarea").value,
       Descripcion: document.getElementById("descripcion").value,
+      Chequeado: false
     };
     console.log(nuevaTarea)
 
@@ -70,7 +71,7 @@ const Formulario = (props) => {
           </Modal>
         </Portal>
         <Pressable style={styles.pressable} onPress={showModal}>
-          <Text>Add Task +</Text>
+          <Text style={{color: 'white'}}>Add Task +</Text>
         </Pressable>
       </PaperProvider>
       
