@@ -8,11 +8,17 @@ import { ListItem, Icon, Button } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RightOutlined } from "@ant-design/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getData, storeData } from "./asyncStorage";
+import { storeData } from "./asyncStorage";
 
 export default function App() {
   const [tareas, setTareas] = useState([]);
 
+  useEffect(() => {
+    //Actualiza el asyncStorage solo cuando tarea cambia (Eliminar o crear tarea)
+    storeData(tareas);
+    
+  }, [tareas]);
+  
   useEffect(() => {
     const inicializarAsyncStorage = async () => {
       try {
@@ -25,23 +31,13 @@ export default function App() {
       }
     };
     inicializarAsyncStorage();
-     
-    //Actualiza el asyncStorage solo cuando tarea cambia (Eliminar o crear tarea)
-    storeData(tareas);
-    
-    var asyncTareas = getData();
-    var a = asyncTareas;
-    console.log(a);
+  
+    const listaGuardada = getData()
+    if(listaGuardada != null){
 
-  }, [tareas]);
-
-  const guardarTarea = async (tarea) => {
-    try {
-      const tareas = [...tareas, tarea];
-    } ///////// TERMINAR ASAP
-    
-  }
-
+    }
+  }, [])
+  
   //Componente Tarea: para modularizar el codigo, hay que hacer un async-await en Tarea.jsx
   const Tarea = ({ tarea, tareas, setTareas, posicion }) => {
     const eliminarTarea = () => {
@@ -51,39 +47,43 @@ export default function App() {
       console.log("Lista 1:" + lista1);
       var lista2 = tareas.slice(posicion + 1, tareas.length);
       console.log("Lista 2:" + lista2);
-
+      
       setTareas(lista1.concat(lista2));
     };
 
-    return (
-      <View>
-        <ListItem.Swipeable
-          leftContent={() => (
-            <>
-              <Button
-                title="Eliminar"
-                onPress={() => eliminarTarea()}
-                icon={{ name: "info", color: "white" }}
-                buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-              />
-            </>
-          )}
-        >
-          <Icon name="My Icon" />
-          <ListItem.Content>
-            <ListItem.Title>{tarea.Tarea}</ListItem.Title>
-            <ListItem.Subtitle>{tarea.Descripcion}</ListItem.Subtitle>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem.Swipeable>
-      </View>
-    );
+  };
+  const guardarTarea = async (tarea) => {
+    try {
+      const newTareas = [...tarea];
+      setTareas(newTareas)
+      await AsyncStorage.setItem('@tareas', JSON.stringify(newTareas))
+    }
+    catch (e){
+      console.log(e)
+      throw new Error('Error: Error en guardarTarea()')
+    }
+  }
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@tareas');
+      if (value !== null) {
+        // value previously stored
+        console.log(value);
+        return value;
+      }
+    } catch (e) {
+      // error reading value
+      return null
+    }
   };
 
   function updateTask(p) {
     setTareas(p);
+    guardarTarea(p)
     console.log(p);
+    getData()
   }
+
 
   const eliminarTarea = (tarea) => {
     //const nuevasTareas = tareas.filter((tareas) => tareas.tarea == tarea);
@@ -105,15 +105,15 @@ export default function App() {
       <View style={styles.container}>
         <h1>Listado de Tareas</h1>
 
+        <div style={{display: 'flex'}}>
+
         <Formulario setTareas={updateTask} tareas={tareas} /> <br></br>
 
-        {
-          //<ListadoTareas tareas={tareas} setTareas={updateTask} />
-        }
+        <div style={{display: 'flex', flexDirection: 'column', marginLeft: '30%'}}>
 
         {
-        tareas.map((tarea) => (
-          <>
+          tareas.map((tarea) => (
+            <>
           
             <ListItem.Swipeable
               leftContent={() => (
@@ -123,11 +123,11 @@ export default function App() {
                     onPress={() => eliminarTarea(tarea)}
                     icon={{ name: "delete", color: "white" }}
                     buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-                  />
+                    />
                   <RightOutlined />
                 </>
               )}
-            >
+              >
               <Icon name="My Icon" />
               <ListItem.Content>
                 <ListItem.Title>{tarea.Tarea}</ListItem.Title>
@@ -137,7 +137,9 @@ export default function App() {
             </ListItem.Swipeable>
           </>
         ))}
+        </div>
 
+        </div>
         <StatusBar style="auto" />
       </View>
     </SafeAreaProvider>
